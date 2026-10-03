@@ -12,15 +12,32 @@ export function cleanTitle(value) {
 }
 
 export function publicDream(entry) {
-  const hidden = entry.visibility === "hidden";
+  const sealed = entry.visibility === "sealed" || entry.visibility === "hidden";
   return {
     id: String(entry.id),
     author: entry.author || "assistant",
     title: entry.title || null,
-    content: hidden ? null : entry.content || "",
-    visibility: hidden ? "hidden" : "public",
-    hidden,
+    content: sealed ? null : entry.content || "",
+    visibility: sealed ? "sealed" : "public",
+    hidden: sealed,
     created_at: entry.created_at,
+  };
+}
+
+export function dreamMetadata(entry) {
+  const sealed = entry.visibility === "sealed" || entry.visibility === "hidden";
+  return {
+    id: String(entry.id),
+    title: entry.title || null,
+    visibility: sealed ? "sealed" : "public",
+    created: entry.created_at,
+  };
+}
+
+export function trustedDream(entry) {
+  return {
+    ...dreamMetadata(entry),
+    content: entry.content || "",
   };
 }
 
@@ -36,3 +53,4 @@ export function pageOf(entries, pageValue, limitValue) {
     limit,
   };
 }
+
