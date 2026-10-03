@@ -100,7 +100,7 @@ export default function DreamJournal() {
     <section className="journal" aria-label="Dream journal entries">
       {entries.map((entry) => {
         const open = openId === entry.id;
-        const hidden = entry.visibility === "hidden";
+        const hidden = entry.visibility === "sealed" || entry.visibility === "hidden";
         const editing = editingId === entry.id;
         const time = formatTime(entry.created_at);
 
@@ -171,4 +171,5 @@ export default function DreamJournal() {
     </section>
   );
 }
+
 
