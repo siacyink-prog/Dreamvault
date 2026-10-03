@@ -48,6 +48,9 @@ The example server binds to loopback for local use. Before adapting it for an in
 
 See [the Chinese tutorial](docs/TUTORIAL.zh-CN.md), [API contract](docs/API.md), and [architecture notes](docs/ARCHITECTURE.md).
 
+To connect an MCP client over HTTPS, see [the remote MCP setup](docs/MCP.md).
+
 ## License
 
 Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). You may use, modify, and distribute the project for permitted noncommercial purposes under those terms. Commercial use is not permitted by this license.
+
