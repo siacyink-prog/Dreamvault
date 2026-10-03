@@ -22,7 +22,7 @@ Returns newest-first journal entries:
 }
 ```
 
-For a hidden entry, `content` is always `null`. Private reasons and internal context are never returned by this endpoint.
+For a sealed entry, `visibility` is `sealed` and `content` is always `null`. Private reasons and internal context are never returned by this endpoint.
 
 ## `PUT /api/dream/:id/title`
 
@@ -31,4 +31,5 @@ For a hidden entry, `content` is always `null`. Private reasons and internal con
 ```
 
 The included server binds to `127.0.0.1` and is intended for local learning. Add real user authentication and authorization before exposing an adapted service to the internet.
+
 
