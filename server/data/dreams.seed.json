@@ -12,7 +12,7 @@
     "author": "assistant",
     "title": "A page still folded",
     "content": "This content remains private and must never be returned by the list API.",
-    "visibility": "hidden",
+    "visibility": "sealed",
     "hidden_reason": "It is not ready to be shared.",
     "created_at": "2026-09-25T13:18:00.000Z"
   },
@@ -25,4 +25,5 @@
     "created_at": "2026-09-24T02:09:00.000Z"
   }
 ]
+
 
