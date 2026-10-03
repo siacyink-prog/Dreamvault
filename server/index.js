@@ -4,14 +4,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { cleanTitle, pageOf, publicDream } from "./lib/dreams.js";
 import { JsonDreamStore } from "./lib/store.js";
+import { createDreamMcpHandler } from "./mcp.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const port = Number.parseInt(process.env.PORT || "4310", 10);
-const host = process.env.HOST || "127.0.0.1";
+const host = process.env.HOST || (process.env.PORT ? "0.0.0.0" : "127.0.0.1");
 const store = new JsonDreamStore({
   file: process.env.DREAM_DATA_FILE || path.join(root, ".data", "dreams.json"),
   seedFile: path.join(root, "server", "data", "dreams.seed.json"),
 });
+const handleMcp = createDreamMcpHandler(store);
 
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",
@@ -72,6 +74,7 @@ function staticFile(response, url) {
 
 const server = http.createServer(async (request, response) => {
   const url = new URL(request.url, `http://${request.headers.host || `${host}:${port}`}`);
+  if (url.pathname === "/mcp") return handleMcp(request, response);
   if (url.pathname.startsWith("/api/")) return api(request, response, url);
   return staticFile(response, url);
 });
@@ -79,4 +82,5 @@ const server = http.createServer(async (request, response) => {
 server.listen(port, host, () => {
   console.log(`Dream Journal API listening at http://${host}:${port}`);
 });
+
 
