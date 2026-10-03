@@ -19,10 +19,11 @@ export async function considerDream({ contextProvider, model, journal, notifier,
   const entry = await journal.create({
     title: String(decision.title || "Untitled").trim(),
     content: String(decision.content).trim(),
-    visibility: decision.visibility === "hidden" ? "hidden" : "public",
+    visibility: decision.visibility === "sealed" ? "sealed" : "public",
     created_at: now().toISOString(),
   });
   await notifier?.published?.(entry);
   return { wrote: true, entry };
 }
+
 
