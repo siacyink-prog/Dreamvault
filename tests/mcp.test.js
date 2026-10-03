@@ -6,13 +6,17 @@ import { createDreamMcpHandler } from "../server/mcp.js";
 test("remote MCP requires a token and never reveals hidden dream content", async () => {
   const previousToken = process.env.MCP_TOKEN;
   process.env.MCP_TOKEN = "test-secret";
+  let renamedTitle;
   const store = {
     all: () => [{
       id: "private-1", title: "Folded", content: "private body",
       hidden_reason: "private reason", visibility: "hidden",
       created_at: "2026-09-27T00:00:00.000Z",
     }],
-    rename: () => null,
+    rename: (id, title) => {
+      renamedTitle = title;
+      return { id, title, content: "private body", visibility: "hidden" };
+    },
   };
   const server = createServer(createDreamMcpHandler(store));
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
@@ -38,6 +42,22 @@ test("remote MCP requires a token and never reveals hidden dream content", async
     const message = JSON.parse(responseText.match(/^data: (.+)$/m)[1]);
     const page = JSON.parse(message.result.content[0].text);
     assert.equal(page.entries[0].content, null);
+
+    const renameResponse = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json, text/event-stream",
+        Authorization: "Bearer test-secret",
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0", id: 2, method: "tools/call",
+        params: { name: "rename_dream", arguments: { id: "private-1", title: "  New title!  " } },
+      }),
+    });
+    assert.equal(renameResponse.status, 200);
+    assert.equal(renamedTitle, "New title");
+    assert.doesNotMatch(await renameResponse.text(), /private body/);
   } finally {
     await new Promise((resolve) => server.close(resolve));
     if (previousToken === undefined) delete process.env.MCP_TOKEN;
