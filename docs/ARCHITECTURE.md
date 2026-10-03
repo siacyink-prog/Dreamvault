@@ -16,5 +16,6 @@ web view <── public API <── journal repository <── write / skip
                                            └──> optional notification adapter
 ```
 
-The important boundary is the public entry serializer. A hidden page may remain available to trusted server-side features, but the list API must not return its content or internal reason.
+The important boundary is the public entry serializer. A sealed page may remain available to trusted server-side features, but the public list API must not return its content or internal reason.
+
 
